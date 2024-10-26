@@ -13,17 +13,6 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function index($request)
-    // {
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'description' => 'required|string',
-    //         'date' => 'required|date',
-    //         'location' => 'required|string|max:255',
-    //         'category_id' => 'required|exists:categories,id'
-    //      ]);
-         
-    // }
 
     public function index()
 {
@@ -127,5 +116,17 @@ class EventController extends Controller
 
         return redirect()->route('events.index')
             ->with('success', 'Event deleted successfully.');
+    }
+
+    public function apiIndex()
+    {
+        $events = Event::with('category')->get();
+        return response()->json($events);
+    }
+
+    public function apiShow($id)
+    {
+        $event = Event::with(['category', 'attendees'])->findOrFail($id);
+        return response()->json($event);
     }
 }
